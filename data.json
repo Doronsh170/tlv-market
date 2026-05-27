@@ -1,0 +1,31 @@
+{
+  "lastUpdated": null,
+  "marketStatus": {
+    "israelHolidays2026": [
+      "2026-04-01",
+      "2026-04-02",
+      "2026-04-08",
+      "2026-04-22",
+      "2026-04-23",
+      "2026-05-21",
+      "2026-05-22",
+      "2026-09-11",
+      "2026-09-14",
+      "2026-09-15",
+      "2026-09-20",
+      "2026-09-21",
+      "2026-09-25",
+      "2026-09-28",
+      "2026-10-05"
+    ]
+  },
+  "dailyPrep": null,
+  "dailySummary": null,
+  "weeklyPrep": null,
+  "weeklySummary": null,
+  "liveNews": null,
+  "events": {
+    "lastUpdated": null,
+    "items": []
+  }
+}

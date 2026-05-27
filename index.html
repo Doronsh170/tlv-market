@@ -1,0 +1,389 @@
+<!DOCTYPE html>
+<html lang="he" dir="rtl">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>תל אביב IL – סקירות שוק בעברית</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Heebo:wght@300;400;500;700;900&family=Rubik:wght@400;500;700&display=swap" rel="stylesheet">
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          colors: {
+            wall: {
+              50:'#f7f8fc', 100:'#eef0f6', 200:'#e2e5ec', 300:'#cbd0db',
+              400:'#94a3b8', 500:'#64748b', 600:'#475569', 700:'#334155', 800:'#1e293b', 900:'#0f172a',
+              gold:'#9a7b2d', goldLight:'#b8942f', goldBg:'#fdf8ed', goldBorder:'#e8d5a0',
+              green:'#16a34a', greenBg:'#ecfdf5', red:'#dc2626', redBg:'#fef2f2',
+              navy:'#1a2332'
+            }
+          },
+          fontFamily: { body:['Heebo','sans-serif'], heading:['Rubik','sans-serif'] }
+        }
+      }
+    }
+  </script>
+  <style>
+    body { font-family:'Heebo',sans-serif; background:#f0f2f7; }
+    .gold-glow { box-shadow:0 2px 16px rgba(154,123,45,0.10); }
+    .card-hover { transition:all .25s ease; }
+    .card-hover:hover { transform:translateY(-3px); box-shadow:0 8px 30px rgba(154,123,45,0.12); border-color:#b8942f; }
+    .pulse-dot { animation:pulse 2s ease-in-out infinite; }
+    @keyframes pulse { 0%,100%{opacity:1} 50%{opacity:.4} }
+    .fade-in { animation:fadeIn .6s ease-out; }
+    @keyframes fadeIn { from{opacity:0;transform:translateY(12px)} to{opacity:1;transform:translateY(0)} }
+    .countdown-badge { font-variant-numeric: tabular-nums; }
+  </style>
+</head>
+<body class="min-h-screen text-wall-800">
+
+  <div class="bg-wall-navy">
+    <div class="max-w-6xl mx-auto px-4 py-2 flex items-center justify-between text-xs text-gray-300">
+      <div id="marketStatusBar" class="flex items-center gap-2">
+        <span class="pulse-dot w-2 h-2 rounded-full bg-wall-green inline-block"></span>
+        <span>טוען סטטוס שוק...</span>
+      </div>
+      <div id="clockBar" class="font-mono"></div>
+    </div>
+  </div>
+
+  <header class="border-b border-wall-200 bg-white/90 backdrop-blur shadow-sm">
+    <div class="max-w-6xl mx-auto px-4 py-6">
+      <div class="flex items-center justify-between">
+        <div>
+          <h1 class="text-3xl font-heading font-bold text-wall-900 tracking-tight">
+            <span class="text-wall-gold">תל אביב</span> IL
+          </h1>
+          <p class="text-sm text-wall-500 mt-1">סקירות בורסת תל אביב · בעברית · מבוסס AI</p>
+        </div>
+        <nav class="hidden md:flex items-center gap-1 text-sm">
+          <a href="index.html" class="px-3 py-2 rounded-lg bg-wall-goldBg text-wall-gold font-medium border border-wall-goldBorder">ראשי</a>
+          <a href="daily-prep.html" class="px-3 py-2 rounded-lg hover:bg-wall-100 text-wall-600 hover:text-wall-900 transition">הכנה יומית</a>
+          <a href="daily-summary.html" class="px-3 py-2 rounded-lg hover:bg-wall-100 text-wall-600 hover:text-wall-900 transition">סיכום יומי</a>
+          <a href="weekly-prep.html" class="px-3 py-2 rounded-lg hover:bg-wall-100 text-wall-600 hover:text-wall-900 transition">הכנה שבועית</a>
+          <a href="weekly-summary.html" class="px-3 py-2 rounded-lg hover:bg-wall-100 text-wall-600 hover:text-wall-900 transition">סיכום שבועי</a>
+          <a href="events.html" class="px-3 py-2 rounded-lg hover:bg-wall-100 text-wall-600 hover:text-wall-900 transition">אירועים</a>
+          <a href="live-news.html" class="px-3 py-2 rounded-lg hover:bg-wall-100 text-red-500 hover:text-red-700 transition">🔴 עכשיו</a>
+        </nav>
+      </div>
+      <nav class="md:hidden flex flex-wrap gap-2 mt-4 text-xs">
+        <a href="index.html" class="px-3 py-1.5 rounded-lg bg-wall-goldBg text-wall-gold border border-wall-goldBorder">ראשי</a>
+        <a href="daily-prep.html" class="px-3 py-1.5 rounded-lg bg-wall-100 text-wall-600">הכנה יומית</a>
+        <a href="daily-summary.html" class="px-3 py-1.5 rounded-lg bg-wall-100 text-wall-600">סיכום יומי</a>
+        <a href="weekly-prep.html" class="px-3 py-1.5 rounded-lg bg-wall-100 text-wall-600">הכנה שבועית</a>
+        <a href="weekly-summary.html" class="px-3 py-1.5 rounded-lg bg-wall-100 text-wall-600">סיכום שבועי</a>
+        <a href="events.html" class="px-3 py-1.5 rounded-lg bg-wall-100 text-wall-600">אירועים</a>
+        <a href="live-news.html" class="px-3 py-1.5 rounded-lg bg-red-50 text-red-500">🔴 עכשיו</a>
+      </nav>
+    </div>
+  </header>
+
+  <main class="max-w-6xl mx-auto px-4 py-8 fade-in">
+
+    <div id="heroStatus" class="bg-white border border-wall-200 rounded-2xl p-6 mb-8 gold-glow">
+      <div class="flex items-center gap-3 mb-4">
+        <div id="heroStatusDot" class="w-3 h-3 rounded-full bg-wall-green pulse-dot"></div>
+        <h2 id="heroStatusText" class="text-xl font-heading font-bold text-wall-900">טוען...</h2>
+      </div>
+      <p id="heroStatusDesc" class="text-wall-500 text-sm"></p>
+    </div>
+
+    <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-4 mb-8">
+
+      <a href="daily-prep.html" class="card-hover block bg-white border border-wall-200 rounded-xl p-5 shadow-sm">
+        <div class="flex items-center justify-between mb-3">
+          <div class="flex items-center gap-2">
+            <span class="text-xl">🌅</span>
+            <h3 class="font-heading font-bold text-wall-900">הכנה ליום מסחר</h3>
+          </div>
+          <div id="timer-dailyPrep" class="countdown-badge text-xs bg-wall-goldBg text-wall-gold px-2 py-1 rounded-lg border border-wall-goldBorder"></div>
+        </div>
+        <p class="text-sm text-wall-500 mb-3">מה המשקיעים צריכים לדעת לפני פתיחת המסחר ב-10:00.</p>
+        <div id="dailyPrepDate" class="text-xs text-wall-gold">טוען...</div>
+      </a>
+
+      <a href="daily-summary.html" class="card-hover block bg-white border border-wall-200 rounded-xl p-5 shadow-sm">
+        <div class="flex items-center justify-between mb-3">
+          <div class="flex items-center gap-2">
+            <span class="text-xl">🌙</span>
+            <h3 class="font-heading font-bold text-wall-900">סיכום יום מסחר</h3>
+          </div>
+          <div id="timer-dailySummary" class="countdown-badge text-xs bg-wall-goldBg text-wall-gold px-2 py-1 rounded-lg border border-wall-goldBorder"></div>
+        </div>
+        <p class="text-sm text-wall-500 mb-3">מה קרה היום: מדדים, מניות בולטות, סנטימנט ומבט קדימה.</p>
+        <div id="dailySummaryDate" class="text-xs text-wall-gold">טוען...</div>
+      </a>
+
+      <a href="weekly-prep.html" class="card-hover block bg-white border border-wall-200 rounded-xl p-5 shadow-sm">
+        <div class="flex items-center justify-between mb-3">
+          <div class="flex items-center gap-2">
+            <span class="text-xl">📋</span>
+            <h3 class="font-heading font-bold text-wall-900">הכנה לשבוע מסחר</h3>
+          </div>
+          <div id="timer-weeklyPrep" class="countdown-badge text-xs bg-wall-goldBg text-wall-gold px-2 py-1 rounded-lg border border-wall-goldBorder"></div>
+        </div>
+        <p class="text-sm text-wall-500 mb-3">אירועי השבוע, דוחות צפויים ומגמות מאקרו.</p>
+        <div id="weeklyPrepDate" class="text-xs text-wall-gold">טוען...</div>
+      </a>
+
+      <a href="weekly-summary.html" class="card-hover block bg-white border border-wall-200 rounded-xl p-5 shadow-sm">
+        <div class="flex items-center justify-between mb-3">
+          <div class="flex items-center gap-2">
+            <span class="text-xl">📊</span>
+            <h3 class="font-heading font-bold text-wall-900">סיכום שבועי</h3>
+          </div>
+          <div id="timer-weeklySummary" class="countdown-badge text-xs bg-wall-goldBg text-wall-gold px-2 py-1 rounded-lg border border-wall-goldBorder"></div>
+        </div>
+        <p class="text-sm text-wall-500 mb-3">סיכום ביצועים שבועי, סקטורים מובילים ומבט לשבוע הבא.</p>
+        <div id="weeklySummaryDate" class="text-xs text-wall-gold">טוען...</div>
+      </a>
+
+      <a href="events.html" class="card-hover block bg-white border border-wall-200 rounded-xl p-5 shadow-sm">
+        <div class="flex items-center gap-2 mb-3">
+          <span class="text-xl">⚡</span>
+          <h3 class="font-heading font-bold text-wall-900">אירועים כלכליים</h3>
+        </div>
+        <p class="text-sm text-wall-500 mb-3">לוח אירועים, החלטות ריבית בנק ישראל, מדד המחירים ודוחות.</p>
+        <div id="eventsDate" class="text-xs text-wall-gold">טוען...</div>
+      </a>
+
+      <a href="live-news.html" class="card-hover block bg-white border-2 border-red-200 rounded-xl p-5 shadow-sm">
+        <div class="flex items-center gap-2 mb-3">
+          <span class="text-xl">🔴</span>
+          <h3 class="font-heading font-bold text-red-600">מה קורה עכשיו</h3>
+        </div>
+        <p class="text-sm text-wall-500 mb-3">סקירת חדשות מיידית לפי דרישה — מה קורה ברגע זה בבורסה.</p>
+        <div id="liveNewsDate" class="text-xs text-red-400">עדכון לפי דרישה</div>
+      </a>
+
+    </div>
+
+    <div class="bg-white/70 border border-wall-200 rounded-xl p-5">
+      <h3 class="text-sm font-heading font-bold text-wall-500 mb-3">מקורות מידע</h3>
+      <div class="flex flex-wrap gap-3 text-xs">
+        <span class="bg-wall-100 px-3 py-1.5 rounded-full text-wall-600">@TASE_IL</span>
+        <span class="bg-wall-100 px-3 py-1.5 rounded-full text-wall-600">@TheMarker</span>
+        <span class="bg-wall-100 px-3 py-1.5 rounded-full text-wall-600">@Calcalist</span>
+        <span class="bg-wall-100 px-3 py-1.5 rounded-full text-wall-600">@Globes</span>
+        <span class="bg-wall-100 px-3 py-1.5 rounded-full text-wall-600">@SponserNews</span>
+      </div>
+      <p class="text-xs text-wall-400 mt-3">הסקירות נוצרות באמצעות AI על בסיס פוסטים ממקורות אלו. אין באמור המלצה לפעולה בניירות ערך.</p>
+    </div>
+
+  </main>
+
+  <footer class="border-t border-wall-200 mt-12 bg-white/50">
+    <div class="max-w-6xl mx-auto px-4 py-6 text-center text-xs text-wall-500">
+      <p>תל אביב IL · סקירות שוק בעברית מבוססות AI</p>
+      <p class="mt-1">אין באמור ייעוץ השקעות או המלצה לפעולה בניירות ערך.</p>
+      <p class="mt-2 text-wall-400">פותח ע"י דורון שרייבמן</p>
+    </div>
+  </footer>
+
+  <script>
+    const ISRAEL_TZ = 'Asia/Jerusalem';
+    let siteData = null;
+
+    function nowInIsrael() {
+      return new Date(new Date().toLocaleString('en-US', { timeZone: ISRAEL_TZ }));
+    }
+
+    function formatHebrewDate(dateStr) {
+      if (!dateStr) return 'טרם עודכן';
+      const d = new Date(dateStr);
+      if (isNaN(d.getTime())) return 'טרם עודכן';
+      const days = ['ראשון','שני','שלישי','רביעי','חמישי','שישי','שבת'];
+      const months = ['ינואר','פברואר','מרץ','אפריל','מאי','יוני','יולי','אוגוסט','ספטמבר','אוקטובר','נובמבר','דצמבר'];
+      return `יום ${days[d.getDay()]}, ${d.getDate()} ${months[d.getMonth()]} ${d.getFullYear()}`;
+    }
+
+    // TASE trading hours (post Jan 4, 2026 reform):
+    // Mon-Thu: 10:00-17:35
+    // Fri: 10:00-13:50 (short day)
+    // Closed: Sat, Sun
+    // JS day: Sun=0, Mon=1, ... Sat=6
+    function getMarketStatus() {
+      const now = nowInIsrael();
+      const day = now.getDay();
+      const h = now.getHours(), m = now.getMinutes();
+      const timeMinutes = h * 60 + m;
+      const dateStr = now.toISOString().split('T')[0];
+      const holidays = siteData?.marketStatus?.israelHolidays2026 || [];
+      const isHoliday = holidays.includes(dateStr);
+
+      if (day === 6) return { status:'closed', color:'red', text:'השוק סגור – שבת', desc:'המסחר ייפתח ביום שני ב-10:00.' };
+      if (day === 0) return { status:'closed', color:'red', text:'השוק סגור – יום ראשון', desc:'המסחר ייפתח מחר (שני) ב-10:00.' };
+      if (isHoliday) return { status:'closed', color:'red', text:'השוק סגור – חג', desc:'המסחר מושבת בשל חג.' };
+
+      const isFriday = (day === 5);
+      const marketOpen = 10 * 60;
+      const marketClose = isFriday ? (13 * 60 + 50) : (17 * 60 + 35);
+      const preOpenStart = 9 * 60 + 25;
+
+      if (timeMinutes >= marketOpen && timeMinutes < marketClose) {
+        const closeStr = isFriday ? '13:50' : '17:35';
+        return { status:'open', color:'green', text:'השוק פתוח', desc:`המסחר פעיל. סגירה ב-${closeStr}.` };
+      }
+      if (timeMinutes >= preOpenStart && timeMinutes < marketOpen) {
+        return { status:'preopen', color:'gold', text:'טרום פתיחה', desc:'שלב טרום הפתיחה. פתיחה רשמית ב-10:00.' };
+      }
+      if (timeMinutes >= marketClose) {
+        return { status:'closed', color:'red', text:'השוק סגור', desc:'המסחר היומי הסתיים.' };
+      }
+      return { status:'waiting', color:'muted', text:'השוק עדיין לא נפתח', desc:'טרום פתיחה מ-09:25, פתיחה ב-10:00.' };
+    }
+
+    function updateClock() {
+      const now = nowInIsrael();
+      document.getElementById('clockBar').textContent = `${String(now.getHours()).padStart(2,'0')}:${String(now.getMinutes()).padStart(2,'0')}:${String(now.getSeconds()).padStart(2,'0')} IL`;
+    }
+
+    function updateMarketStatus() {
+      const ms = getMarketStatus();
+      const colorMap = { green:'bg-wall-green', red:'bg-wall-red', gold:'bg-wall-gold', muted:'bg-wall-400' };
+      const bar = document.getElementById('marketStatusBar');
+      if (bar) bar.innerHTML = `<span class="pulse-dot w-2 h-2 rounded-full ${colorMap[ms.color]} inline-block"></span><span>${ms.text}</span>`;
+      const heroText = document.getElementById('heroStatusText');
+      const heroDot = document.getElementById('heroStatusDot');
+      const heroDesc = document.getElementById('heroStatusDesc');
+      if (heroText) heroText.textContent = ms.text;
+      if (heroDot) heroDot.className = `w-3 h-3 rounded-full ${colorMap[ms.color]} pulse-dot`;
+      if (heroDesc) heroDesc.textContent = ms.desc;
+    }
+
+    const HEB_DAYS = ['ראשון','שני','שלישי','רביעי','חמישי','שישי','שבת'];
+
+    function getIsraelParts() {
+      const fmt = new Intl.DateTimeFormat('en-US', {
+        timeZone: ISRAEL_TZ, hour12: false,
+        weekday: 'short', year: 'numeric', month: '2-digit', day: '2-digit',
+        hour: '2-digit', minute: '2-digit', second: '2-digit'
+      });
+      const parts = {};
+      fmt.formatToParts(new Date()).forEach(p => parts[p.type] = p.value);
+      const dayMap = { Sun:0, Mon:1, Tue:2, Wed:3, Thu:4, Fri:5, Sat:6 };
+      return {
+        day: dayMap[parts.weekday] ?? 0,
+        h: parseInt(parts.hour),
+        m: parseInt(parts.minute),
+        s: parseInt(parts.second)
+      };
+    }
+
+    function getNextUpdateInfo(type) {
+      const { day, h, m, s } = getIsraelParts();
+      const nowSecs = h * 3600 + m * 60 + s;
+
+      function calc(targetDay, targetH, targetM) {
+        let daysAhead = (targetDay - day + 7) % 7;
+        const targetSecs = targetH * 3600 + targetM * 60;
+        if (daysAhead === 0 && targetSecs <= nowSecs) daysAhead = 7;
+        return {
+          secs: daysAhead * 86400 + (targetSecs - nowSecs),
+          dayName: HEB_DAYS[targetDay],
+          time: `${String(targetH).padStart(2,'0')}:${String(targetM).padStart(2,'0')}`
+        };
+      }
+
+      // Schedule:
+      // dailyPrep:    09:00 IL, Mon-Fri (day 1-5)
+      // dailySummary: 18:30 IL Mon-Thu (day 1-4), 14:30 Fri (day 5)
+      // weeklyPrep:   Sun 18:00 (day 0)
+      // weeklySummary: Fri 15:00 (day 5)
+      if (type === 'dailyPrep') {
+        let best = null;
+        for (let d = 1; d <= 5; d++) {
+          const r = calc(d, 9, 0);
+          if (!best || r.secs < best.secs) best = r;
+        }
+        return best;
+      }
+      if (type === 'dailySummary') {
+        let best = null;
+        for (let d = 1; d <= 4; d++) {
+          const r = calc(d, 18, 30);
+          if (!best || r.secs < best.secs) best = r;
+        }
+        const fri = calc(5, 14, 30);
+        if (!best || fri.secs < best.secs) best = fri;
+        return best;
+      }
+      if (type === 'weeklyPrep') return calc(0, 18, 0);
+      if (type === 'weeklySummary') return calc(5, 15, 0);
+      return null;
+    }
+
+    function formatRelative(totalSecs) {
+      if (totalSecs <= 0) return 'עכשיו';
+      const days = Math.floor(totalSecs / 86400);
+      const hours = Math.floor((totalSecs % 86400) / 3600);
+      const mins = Math.floor((totalSecs % 3600) / 60);
+      if (days > 1) return `בעוד ${days} ימים`;
+      if (days === 1 && hours > 0) return `בעוד יום ו-${hours} שעות`;
+      if (days === 1) return 'בעוד יום';
+      if (hours > 1) return `בעוד ${hours} שעות`;
+      if (hours === 1) return `בעוד שעה ו-${mins} דקות`;
+      if (mins > 1) return `בעוד ${mins} דקות`;
+      return 'בעוד דקה';
+    }
+
+    function updateTimers() {
+      const types = ['dailyPrep','dailySummary','weeklyPrep','weeklySummary'];
+      types.forEach(type => {
+        const el = document.getElementById('timer-' + type);
+        if (!el) return;
+        const info = getNextUpdateInfo(type);
+        if (!info) { el.textContent = ''; return; }
+        el.textContent = `עדכון הבא: ${info.dayName} ${info.time} · ${formatRelative(info.secs)}`;
+      });
+    }
+
+    async function loadData() {
+      try {
+        const resp = await fetch('data.json?_=' + Date.now());
+        siteData = await resp.json();
+        updateMarketStatus();
+        updateTimers();
+
+        if (siteData.dailyPrep?.date) {
+          const el = document.getElementById('dailyPrepDate');
+          if (el) el.textContent = `עודכן: ${formatHebrewDate(siteData.dailyPrep.date)}`;
+        }
+        if (siteData.dailySummary?.date) {
+          const el = document.getElementById('dailySummaryDate');
+          if (el) el.textContent = `עודכן: ${formatHebrewDate(siteData.dailySummary.date)}`;
+        }
+        if (siteData.weeklyPrep?.date) {
+          const el = document.getElementById('weeklyPrepDate');
+          if (el) el.textContent = `עודכן: ${formatHebrewDate(siteData.weeklyPrep.date)}`;
+        }
+        if (siteData.weeklySummary?.date) {
+          const el = document.getElementById('weeklySummaryDate');
+          if (el) el.textContent = `עודכן: ${formatHebrewDate(siteData.weeklySummary.date)}`;
+        }
+        if (siteData.events?.lastUpdated) {
+          const el = document.getElementById('eventsDate');
+          const d = new Date(siteData.events.lastUpdated);
+          if (el) el.textContent = isNaN(d.getTime())
+            ? 'טרם עודכן'
+            : `עודכן: ${d.toLocaleString('he-IL')}`;
+        }
+        if (siteData.liveNews?.date) {
+          const el = document.getElementById('liveNewsDate');
+          if (el) el.textContent = `עודכן: ${formatHebrewDate(siteData.liveNews.date)}`;
+        }
+      } catch(e) {
+        console.error('Failed to load data:', e);
+      }
+    }
+
+    loadData();
+    updateClock();
+    setInterval(updateClock, 1000);
+    setInterval(updateTimers, 30000);
+    setInterval(updateMarketStatus, 30000);
+  </script>
+</body>
+</html>
