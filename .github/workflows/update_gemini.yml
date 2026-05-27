@@ -1,1 +1,93 @@
+name: Update TLV Market
 
+on:
+  workflow_dispatch:
+    inputs:
+      review_type:
+        description: 'Review type to generate'
+        required: true
+        default: 'daily_prep'
+        type: choice
+        options:
+          - daily_prep
+          - daily_summary
+          - weekly_prep
+          - weekly_summary
+          - live_news
+
+  schedule:
+    # Daily prep: 09:00 Israel time, Mon-Fri.
+    - cron: '0 6 * * 1-5'
+    # Daily summary: 18:30 Israel time, Mon-Thu.
+    - cron: '30 15 * * 1-4'
+    # Friday daily summary: 14:30 Israel time (after Fri short close).
+    - cron: '30 11 * * 5'
+    # Weekly prep: Sunday 18:00 Israel time.
+    - cron: '0 15 * * 0'
+    # Weekly summary: Friday 15:00 Israel time.
+    - cron: '0 12 * * 5'
+
+concurrency:
+  group: tlv-market-update
+  cancel-in-progress: false
+
+permissions:
+  contents: write
+
+jobs:
+  update:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+
+      - name: Install dependencies
+        run: pip install requests
+
+      - name: Determine review type from trigger
+        id: type
+        shell: bash
+        run: |
+          if [ "${{ github.event_name }}" = "workflow_dispatch" ]; then
+            echo "type=${{ github.event.inputs.review_type }}" >> $GITHUB_OUTPUT
+            exit 0
+          fi
+
+          HOUR=$(date -u +%H)
+          MIN=$(date -u +%M)
+          DOW=$(date -u +%u)
+
+          if [ "$DOW" = "7" ] && [ "$HOUR" = "15" ]; then
+            echo "type=weekly_prep" >> $GITHUB_OUTPUT
+          elif [ "$DOW" = "5" ] && [ "$HOUR" = "12" ]; then
+            echo "type=weekly_summary" >> $GITHUB_OUTPUT
+          elif [ "$DOW" = "5" ] && [ "$HOUR" = "11" ] && [ "$MIN" = "30" ]; then
+            echo "type=daily_summary" >> $GITHUB_OUTPUT
+          elif [ "$HOUR" = "06" ] && [ "$MIN" = "00" ]; then
+            echo "type=daily_prep" >> $GITHUB_OUTPUT
+          elif [ "$HOUR" = "15" ] && [ "$MIN" = "30" ]; then
+            echo "type=daily_summary" >> $GITHUB_OUTPUT
+          else
+            echo "type=daily_prep" >> $GITHUB_OUTPUT
+          fi
+
+      - name: Run update script
+        env:
+          GEMINI_API_KEY: ${{ secrets.GEMINI_API_KEY }}
+          TWITTER_API_KEY: ${{ secrets.TWITTER_API_KEY }}
+          REVIEW_TYPE: ${{ steps.type.outputs.type }}
+        run: python scripts/update_data.py
+
+      - name: Commit and push changes
+        shell: bash
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          git add data.json
+          git diff --staged --quiet && echo "No changes to commit" && exit 0
+          git commit -m "Update ${{ steps.type.outputs.type }} - $(date -u +%Y-%m-%dT%H:%M:%S)"
+          git pull --rebase origin main || { echo "Rebase conflict — data already updated by another run, skipping."; git rebase --abort; exit 0; }
+          git push
