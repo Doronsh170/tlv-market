@@ -143,28 +143,57 @@ def load_holidays():
 # TWEET FETCHING
 # ══════════════════════════════════════════════════════════════
 
+def _extract_tweets_from_response(data):
+    """twitterapi.io may return tweets at top level: {"tweets": [...]}.
+    Older/other wrappers may return {"data": {"tweets": [...]}}. Support both.
+    """
+    if not isinstance(data, dict):
+        return []
+
+    tweets = data.get("tweets")
+    if isinstance(tweets, list):
+        return tweets
+
+    nested = data.get("data")
+    if isinstance(nested, dict) and isinstance(nested.get("tweets"), list):
+        return nested.get("tweets", [])
+
+    return []
+
+
 def fetch_tweets():
     all_t = []
     for acc in ACCOUNTS:
         try:
             r = requests.get(
-                f"https://api.twitterapi.io/twitter/user/last_tweets?userName={acc}",
-                headers={"X-API-Key": TWITTER_API_KEY}
+                "https://api.twitterapi.io/twitter/user/last_tweets",
+                headers={"X-API-Key": TWITTER_API_KEY},
+                params={"userName": acc},
+                timeout=60,
             )
             print(f"  @{acc}: status={r.status_code}")
             if r.ok:
                 data = r.json()
-                tweets = data.get("data", {}).get("tweets", [])
+                tweets = _extract_tweets_from_response(data)
                 print(f"    -> {len(tweets)} tweets")
+
+                if not tweets:
+                    msg = data.get("message") if isinstance(data, dict) else ""
+                    status = data.get("status") if isinstance(data, dict) else ""
+                    print(f"    -> Empty response. status={status!r}, message={msg!r}, keys={list(data.keys()) if isinstance(data, dict) else 'not-dict'}")
+
                 for t in tweets[:10]:
+                    if not isinstance(t, dict):
+                        continue
                     text = t.get('text', '')
                     ts = t.get('createdAt') or t.get('created_at') or t.get('date') or ''
-                    if ts:
-                        all_t.append(f"@{acc} [{ts}]: {text}")
-                    else:
-                        all_t.append(f"@{acc}: {text}")
+                    if text:
+                        if ts:
+                            all_t.append(f"@{acc} [{ts}]: {text}")
+                        else:
+                            all_t.append(f"@{acc}: {text}")
             else:
-                print(f"    -> Error: {r.text[:200]}")
+                print(f"    -> Error: {r.text[:500]}")
         except Exception as e:
             print(f"  Error fetching {acc}: {e}")
     return "\n\n".join(all_t)
@@ -527,8 +556,7 @@ def main():
     # Fetch tweets
     tweets = fetch_tweets()
     if not tweets:
-        print("No tweets fetched, skipping.")
-        return
+        raise RuntimeError("No tweets fetched from twitterapi.io. Check TWITTER_API_KEY, account names, or response schema.")
 
     print(f"Fetched ~{len(tweets.split(chr(10)+chr(10)))} tweet blocks")
 
