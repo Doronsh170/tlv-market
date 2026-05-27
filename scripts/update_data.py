@@ -2,7 +2,7 @@
 tlv-market — Israeli market review system
 Built from Wall Street IL architecture, simplified for stage 1 (no prices).
 
-Sources: @TASE_IL, @TheMarker, @Calcalist, @Globes, @SponserNews
+Sources: @TASE_IL, @TheMarker, @Calcalist, @Globesnews, @SponserNews
 Trading days: Mon-Fri (since Jan 4, 2026)
 Trading hours: Mon-Thu 10:00-17:35, Fri 10:00-13:50
 """
